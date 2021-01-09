@@ -1,0 +1,1501 @@
+<html>
+<head>
+	<style>
+	*{padding: 0; margin:0;}
+	canvas{ background: #eee; display: block; margin: 0 auto;}
+	</style>
+</head>
+<body>
+<canvas id= "myCanvas" width="800" height="600"></canvas>
+<script type="text/javascript">
+let canvas = document.getElementById("myCanvas");
+let ctx = canvas.getContext("2d");
+document.addEventListener("keydown", keyDownHandler, false);
+document.addEventListener("keyup", keyUpHandler, false);
+canvas.addEventListener("mousedown", getPosition, false);
+ctx.canvas.width = window.innerWidth;
+ctx.canvas.height = window.innerHeight;
+let wW = window.innerWidth;
+let wH = window.innerHeight;
+let x = -1;
+let y = -1;
+let fps = 60;
+let leftPressed = false;
+let rightPressed = false;
+let mouseX = 0;
+let mouseY = 0;
+let screenNum = 0;
+//brickBreaker
+let ballX = 400;
+let ballY = 400;
+let radius = 20;
+let ballXTheta = 1.5;
+let ballYTheta = 1.5;
+let paddleX = 400;
+let paddleY = 580;
+let paddleW = 100;
+let paddleH = 10;
+let blocks = [];
+let score = 0;
+let HighScore = [];
+let DownPressed = false;
+let UpPressed = false;
+let APressed = false;
+let DPressed = false;
+let SPressed = false;
+//world Generater
+let spriteScale = 30;
+let mapDimentions = 1;
+let mapWidth = 20;
+let mapHeight = 20;
+let landToAdd = 30;
+let blockSize = 5;
+let numbush = 10;
+let hasBeenLoaded = false;
+let landBlocks = [];
+let mapTile0 = new Image();
+mapTile0.src = "tile283.png";
+let mapTile9 = new Image();
+mapTile9.src = "tile323.png";
+let mapTile8 = new Image();
+mapTile8.src = "right.png";
+let mapTile7 = new Image();
+mapTile7.src = "bottom.png";
+let mapTile6 = new Image();
+mapTile6.src = "tile284.png";
+let mapTile5 = new Image();
+mapTile5.src = "tile403.png";
+let mapTile4 = new Image();
+mapTile4.src = "tile402.png";
+let mapTile3 = new Image();
+mapTile3.src = "tile363.png";
+let mapTile2 = new Image();
+mapTile2.src = "tile362.png";
+let mapTile1 = new Image();
+mapTile1.src = "tile368.png";
+let mapTile10 = new Image();
+mapTile10.src = "tile562.png";
+// back left house
+let mapTile11 = new Image();
+mapTile11.src = "tile006.png";
+//back next to left
+let mapTile12 = new Image();
+mapTile12.src = "tile007.png";
+// back middle
+let mapTile13 = new Image();
+mapTile13.src = "tile008.png";
+// back top right next to middle
+let mapTile14 = new Image();
+mapTile14.src = "tile009.png";
+// far top right
+let mapTile15 = new Image();
+mapTile15.src = "tile010.png";
+//front top left
+let mapTile16 = new Image();
+mapTile16.src = "tile086.png";
+//front middle top left
+let mapTile17 = new Image();
+mapTile17.src = "tile087.png";
+// middle top front
+let mapTile18 = new Image();
+mapTile18.src = "tile088.png";
+//middle right top
+let mapTile19 = new Image();
+mapTile19.src = "tile089.png";
+// far right top
+let mapTile20 = new Image();
+mapTile20.src = "tile090.png";///////
+//left side middle
+let mapTile21 = new Image();
+mapTile21.src = "tile126.png";
+//middle middle left (window)
+let mapTile22 = new Image();
+mapTile22.src = "tile127.png";
+//top door
+let mapTile23 = new Image();
+mapTile23.src = "tile128.png";
+// right window
+let mapTile24 = new Image();
+mapTile24.src = "tile129.png";
+//far right middle
+let mapTile25 = new Image();
+mapTile25.src = "tile130.png";
+//bottom far left
+let mapTile26 = new Image();
+mapTile26.src = "tile166.png";
+//bottom left
+let mapTile27 = new Image();
+mapTile27.src = "tile167.png";
+//bottom door
+let mapTile28 = new Image();
+mapTile28.src = "tile168.png";
+// bottom right
+let mapTile29 = new Image();
+mapTile29.src = "tile169.png";
+//bottom far right
+let mapTile30 = new Image();
+mapTile30.src = "tile170.png";
+//roof
+let mapTile31 = new Image();
+mapTile31.src = "tile049.png";
+//roof
+let mapTile32 = new Image();
+mapTile32.src = "tile047.png";
+//center roof
+let mapTile33 = new Image();
+mapTile33.src = "tile048.png";
+//left back
+let mapTile34 = new Image();
+mapTile34.src = "tile046.png";
+let mapTile35 = new Image();
+mapTile35.src = "tile050.png";
+// rocks
+let mapTile36 = new Image();
+mapTile36.src = "tile044.png";
+let mapTile37 = new Image();
+mapTile37.src = "tile045.png";
+let mapTile38 = new Image();
+mapTile38.src = "tile085.png";
+let mapTile39 = new Image();
+mapTile39.src = "tile084.png";
+//lilly pads
+let mapTile40 = new Image();
+mapTile40.src = "tile004.png";
+let mapTile41 = new Image();
+mapTile41.src = "tile003.png";
+// fountain
+let mapTile42 = new Image();
+mapTile42.src = "tile382.png";
+let mapTile43 = new Image();
+mapTile43.src = "tile383.png";
+let mapTile44 = new Image();
+mapTile44.src = "tile384.png";
+let mapTile45 = new Image();
+mapTile45.src = "tile422.png";
+let mapTile46 = new Image();
+mapTile46.src = "tile423.png";
+let mapTile47 = new Image();
+mapTile47.src = "tile424.png";
+let mapTile48 = new Image();
+mapTile48.src = "tile462.png";
+let mapTile49 = new Image();
+mapTile49.src = "tile463.png";
+let mapTile50 = new Image();
+mapTile50.src = "tile464.png";
+//flag
+let mapTile51 = new Image();
+mapTile51.src = "tile1163.png";
+let mapTile52 = new Image();
+mapTile52.src = "tile1164.png";
+let mapTile53 = new Image();
+mapTile53.src = "tile1203.png";
+let mapTile54 = new Image();
+mapTile54.src = "tile1204.png";
+let mapTile55 = new Image();
+mapTile55.src = "tile1243.png";
+let mapTile56 = new Image();
+mapTile56.src = "tile794.png";
+//cage
+let mapTile57 = new Image();
+mapTile57.src = "tile025.png";
+let mapTile58 = new Image();
+mapTile58.src = "tile065.png";
+let mapTile59 = new Image();
+mapTile59.src = "tile147.png";
+let mapTile60 = new Image();
+mapTile60.src = "tile105.png";
+let mapTile61 = new Image();
+mapTile61.src = "tile145.png";
+//apps
+let background = new Image();
+background.src = "NetherUpdateArtwork.png";
+let brickBreakerImg = new Image();
+brickBreakerImg.src = "brickbreaker.png";
+
+function getPosition(event)
+{
+  x = event.x - canvas.offsetLeft;
+  y = event.y - canvas.offsetTop;
+  //collision(x,y);
+}
+function keyDownHandler(e)
+{
+    if(e.keyCode == 37)
+    {
+        leftPressed = true;
+        rightPressed = false;
+    }
+    else if(e.keyCode == 39)
+    {
+        rightPressed = true;
+        leftPressed = false;
+    }
+}
+function keyUpHandler(e){
+    if(e.keyCode == 37)
+    {
+        leftPressed = false;
+    }
+    if(e.keyCode == 39)
+    {
+        rightPressed = false;
+    }
+}
+
+function drawHomeScreen()
+{
+		ctx.drawImage(background,0/800 *wW, 0/600 * wH -(25/600 *wH),
+		800/800 *wW, 650/600 *wH);
+		ctx.fillRect(25/800 *(wW), 25/600 *(wH), 40/800 *(wW), 60/600 *(wH));
+		ctx.drawImage(brickBreakerImg,25/800 *wW, 50/600 * wH -(25/600 *wH),
+		40/800 *wW, 60/600 *wH);
+
+
+}
+
+
+function appOpen()
+{
+		if(mouseX >= 25 && mouseY >= 50 && mouseX <= 15 && mouseY <= 10)
+		{
+			screenNum = 1;
+		}
+}
+
+function brickBreaker(drawBall(),collision(),stop(),drawPaddle(),movement(),Movement(),drawScore(),drawBlocks(),MovementAD())
+{
+	function Block(x, y, r, g, b, hit = false)
+	{
+	    this.x = x;
+	    this.y = y;
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.hit = hit;
+	}
+
+
+
+	let colorShift = 0;
+	for(let y = 0; y < 15; y++)
+	{
+	    for(let x = 0; x < 11; x++)
+	    {
+	      if((y+1)%5 == 0)
+			{
+			colorShift++;
+			}
+			colorVal = 0;
+			let r = 0;
+			let g = 0;
+			let b = 0;
+			 if(colorShift == 0)
+			 {
+			 r = (x * 22);
+			 }
+			 if(colorShift == 1)
+			 {
+			 g = (x * 22);
+			 }
+			if(colorShift == 2)
+			 {
+			b = (x * 22);
+			 }
+			let y1 = 75 + (y * 20);
+	        let x1 = 15 + (x * 70);
+			r = Math.floor(Math.random() * 256);
+			g = Math.floor(Math.random() * 256);
+			b = Math.floor(Math.random() * 256);
+
+			a = Math.floor(Math.random() * 1);
+			b = Math.floor(Math.random() * 1);
+			c = Math.floor(Math.random() * 1);
+	        blocks.push(new Block(x1, y1, r, g, b));
+
+	    }
+	}
+
+
+
+	function drawBlocks()
+	{
+	    for(let a = 0; a < blocks.length; a++)
+	    {
+		    if(blocks[a].hit == false)
+			{
+			let r = blocks[a].r;
+			let g = blocks[a].g;
+			let b = blocks[a].b;
+	        ctx.fillStyle = "rgb(" + r + "," + g + "," + b +")";
+	        ctx.fillRect(blocks[a].x, blocks[a].y, 65, 15);
+			}
+	    }
+	}
+
+
+
+	function keyDownHandler(e)
+	{
+	    if(e.keyCode == 37)
+	    {
+	        leftPressed = true;
+	        rightPressed = false;
+	    }
+	    else if(e.keyCode == 39)
+	    {
+	        rightPressed = true;
+	        leftPressed = false;
+	    }
+		if(e.keyCode == 40)
+		{
+		    DownPressed = true;
+			UpPressed = false;
+			}
+			else if(e.keyCode == 38)
+			{
+			UpPressed = true;
+			DownPressed = false;
+			}
+
+		if(e.keyCode == 68)
+	    {
+	        APressed = true;
+	        DPressed = false;
+	    }
+	    else if(e.keyCode == 65)
+	    {
+	        DPressed = true;
+	        APressed = false;
+	    }
+		if(e.keyCode == 83)
+	    {
+	        SPressed = true;
+		}
+
+		   }
+
+
+	function keyUpHandler(e){
+	    if(e.keyCode == 37)
+	    {
+	        leftPressed = false;
+	    }
+	    if(e.keyCode == 39)
+	    {
+	        rightPressed = false;
+	    }
+		if(e.keyCode == 40)
+		{
+		    DownPressed = false;
+			}
+		if(e.keyCode == 38)
+	    {
+		UpPressed = false;
+		}
+		 if(e.keyCode == 68)
+	    {
+	        DPressed = false;
+	    }
+	    if(e.keyCode == 65)
+	    {
+	        APressed = false;
+	    }
+		if(e.keyCode = 83)
+		{
+		    SPressed = false;
+		}
+
+	}
+
+	function drawScore()
+	{
+	     ctx.fillStyle = (" rgb(100,100,100");
+		 ctx.fillText("Score:" + score, 600, 50);
+		 ctx.font = "50px Ariel";
+
+	}
+
+	function movement()
+	{
+	    if(leftPressed == true && (paddleX) >0)
+	    {
+	        paddleX -= 7;
+	    }
+	    else if(rightPressed == true && (paddleX + paddleW) < 800)
+	    {
+	        paddleX += 7;
+	    }
+
+	    ballX += ballXTheta;
+	    ballY += ballYTheta;
+	}
+
+	function Stop()
+	{
+	if (SPressed == true)
+	{
+	let (paddleX == 0);
+	}
+	 ballX += ballXTheta;
+	    ballY -= ballYTheta;
+	}
+
+	function Movement()
+	{
+	    if(UpPressed == true && (paddleX) >0)
+	    {
+	        paddleX -= 7;
+	    }
+	    else if(DownPressed == true && (paddleX + paddleW) < 800)
+	    {
+	        paddleX += 7;
+	    }
+
+	    ballX += ballXTheta;
+	    ballY += ballYTheta;
+	}
+
+	function MovementAD()
+	{
+	    if(DPressed == true && (paddleX) >0)
+	    {
+	        paddleX -= 7;
+	    }
+	    else if(APressed == true && (paddleX + paddleW) < 800)
+	    {
+	        paddleX += 7;
+	    }
+
+	    ballX += ballXTheta;
+	    ballY += ballYTheta;
+		ctx.closePath
+		{
+		 if(DPressed == false && (paddleX) >0)
+	    {
+	        paddleX -= 0;
+	    }
+	    else if(APressed == false && (paddleX + paddleW) < 800)
+	    {
+	        paddleX += 0;
+	    }
+
+	    ballX += ballXTheta;
+	    ballY += ballYTheta;
+		}
+	}
+
+	function drawBall(r, g, b)
+	{
+	    ctx.fillStyle = "rgb(" + r + "," + g + "," + b +")";
+	    ctx.beginPath();
+	    ctx.arc(ballX, ballY, radius, 0, 2*Math.PI);
+	    ctx.closePath();
+	    ctx.fill();
+	}
+
+
+
+	function drawPaddle(a, b, c)
+	{
+	    ctx.fillStyle = "rgb(a, b, c)"
+	    ctx.fillRect(paddleX, paddleY, paddleW, paddleH);
+	}
+
+	function playSound(source)
+	{
+	   var sound = new Audio();
+	   sound.src = source;
+	   sound.play();
+	}
+
+	<!-- function drawHighScore() -->
+	<!-- {  -->
+	     <!-- if(score >= HighScore)	  -->
+		 <!-- { -->
+		<!-- let HighScore = score -->
+		<!-- ctx.fillText("HighScore:" (100, 50)); -->
+		 <!-- ctx.fillStyle = (" rgb(100,100,100)"); -->
+		 <!-- ctx.font = "50px Ariel"; -->
+		 <!-- } -->
+	<!-- }  -->
+
+	<!-- function test() -->
+	<!-- { -->
+	<!-- ctx.fillText("HighScore:" (100, 50)); -->
+	<!-- ctx.fillStyle = (" rgb(100,100,100"); -->
+	<!-- ctx.font = "50px Ariel"; -->
+	<!-- } -->
+
+	function collision()
+	{
+	    if(ballX - radius <= 0 || ballX + radius >= 800)
+	    {
+	        ballXTheta = ballXTheta * -1;
+	    }
+	    if(ballY - radius <= 0)
+	    {
+	        ballYTheta = ballYTheta * -1;
+	    }
+	    if(ballX + radius  >= paddleX &&
+	        ballX + radius   <= paddleX + paddleW &&
+	        ballY + radius >= paddleY &&
+	        ballY + radius  <= paddleY + paddleH)
+	        {
+	            ballYTheta = ballYTheta * -1;
+				playSound("d1.wav")
+	        }
+			for(let a = 0; a < blocks.length; a++)
+			{
+			//the following 22 lines is adapted from http://www.jeffreythompson.org/collision-detection/circle-rect.php
+	  let cx = ballX;
+	  let cy = ballY;
+	  let testX = cx;
+	  let testY = cy;
+	  let rx = blocks[a].x;
+	  let ry = blocks[a].y;
+	  let rw = 65;
+	  let rh = 15
+	  // which edge is closest?
+	  if (cx < rx)         testX = rx;      // test left edge
+	  else if (cx > rx+rw) testX = rx+rw;   // right edge
+	  if (cy < ry)         testY = ry;      // top edge
+	  else if (cy > ry+rh) testY = ry+rh;   // bottom edge
+
+	  // get distance from closest edges
+	  let distX = cx-testX;
+	  let distY = cy-testY;
+	  let distance = Math.sqrt( (distX*distX) + (distY*distY) );
+
+	  // if the distance is less than the radius, collision!
+	  if (distance <= radius && blocks[a].hit != true) {
+	    blocks[a].hit = true;
+		score++;
+		playSound("pop.wav")
+	   ballYTheta = ballYTheta * -1;
+	   //ballXTheta = ballXTheta * -1;
+	   }
+	  }
+
+	   if(ballY + radius >= 600)
+	    {
+	   ctx.fillStyle = (" rgb(100,100,100");
+		 ctx.fillText("GAME OVER", 100, 300);
+		 ctx.font = "100px Ariel";
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(200,300,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(200,290,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(210,280,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(220,270,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(230,260,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(210,310,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(220,320,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(230,330,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(260,330,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(260,320,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(260,310,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(240,310,20,10); -->
+	<!-- ctx.stroke(); -->
+
+	<!-- ctx.beginPath(); -->
+	<!-- ctx.fillStyle = "rgb(141,105,90)" -->
+	<!-- ctx.fillRect(360,310,10,20); -->
+	<!-- ctx.stroke(); -->
+
+	ctx.moveFront();
+	  }
+	}
+
+
+}
+
+function worldGenerater()
+{
+
+function LandBlock(x, y)
+{
+	this.x = x;
+	this.y = y;
+}
+
+let board = [];
+for(let a = 0; a < mapHeight; a++)
+{
+	board[a] = [];
+	for(let b = 0; b < mapWidth; b++)
+	{
+		board[a][b] = 0;
+	}
+}
+
+function getPosition(event)
+{
+  x = event.x - canvas.offsetLeft;
+  y = event.y - canvas.offsetTop;
+  collision(x,y);
+}
+
+function collision(x1, y1)
+{
+	if(x1 >= 650 && x1 <= 750 &&
+		y1 >= 550 && y1 <= 590)
+		{
+			x1 = -1;
+			y1 = -1;
+			board = [];
+			for(let a = 0; a < mapHeight; a++)
+			{
+				board[a] = [];
+				for(let b = 0; b < mapWidth; b++)
+				{
+					board[a][b] = 0;
+				}
+			}
+			createMap();
+		}
+		if(x1 >= 600 && x1 <= 650 &&
+		   y1 >= 20 && y1 <= 65)
+		{// - blocks
+			x1 = -1;
+			y1 = -1;
+			landToAdd -= 5;
+			if(landToAdd <= 1)
+			{
+			   landToAdd = 1;
+			}
+			}
+			if(x1 >= 750 && x1 <= 800 &&
+		       y1 >= 20 && y1 <= 65)
+		{// add blocks
+			x1 = -1;
+			y1 = -1;
+			landToAdd += 5;
+			if(landToAdd > 300)
+			{
+			   landToAdd = 300;
+			}
+			}
+			if(x1 >= 600 && x1 <= 650 &&
+		   y1 >= 120 && y1 <= 165)
+		{// - blocks
+			x1 = -1;
+			y1 = -1;
+			mapDimentions --;
+			hasBeenLoaded = false;
+			if(mapDimentions <= 1)
+			{
+			   mapDimentions = 1;
+			}
+			}
+			if(x1 >= 750 && x1 <= 800 &&
+		       y1 >= 120 && y1 <= 165)
+		{// add blocks
+			x1 = -1;
+			y1 = -1;
+			mapDimentions ++;
+			hasBeenLoaded = false;
+			if(mapDimentions > 100)
+			{
+			   mapDimentions = 100;
+			}
+			}
+		}
+
+
+function drawUI()
+{
+	ctx.fillStyle = "rgb(255,0,0)";
+	ctx.fillRect(650, 550, 100, 40);
+	ctx.fillStyle = "rgb(0,0,0)";
+	ctx.font = "25px Ariel";
+	ctx.fillText("Generate", 655, 585, 100, 40);
+	//top + and minus
+	ctx.fillText(landToAdd, 680, 50, 175, 40);
+	ctx.fillText("land block amount", 610, 100, 175, 40);
+	ctx.font = "50px Ariel";
+	ctx.fillStyle = "rgb(255,0,0)";
+
+	ctx.fillRect(600, 20, 50, 45);
+	ctx.fillStyle = "rgb(0,255,0)";
+	//-
+	ctx.fillRect(750, 20, 50, 45);
+	ctx.fillStyle = "rgb(0,0,0)";
+	ctx.fillText("-", 615, 55, 175, 40);
+
+	//+
+	ctx.fillStyle = "rgb(0,0,0)";
+	ctx.fillText("+", 760, 60, 175, 40);
+	// end of top plus & minus
+	// begin of map demintions
+	ctx.font = "25px Ariel";
+	if(mapDimentions == 1)
+	{
+	   ctx.fillText("20 * 20", 670, 150, 175, 40);
+	   spriteScale = 30;
+	   mapWidth = 30;
+	   mapHeight = 20;
+	}
+	if(mapDimentions == 2)
+	{
+	   ctx.fillText("24 * 24", 670, 150, 175, 40);
+	   	   spriteScale = 25;
+	   mapWidth = 24;
+	   mapHeight = 24;
+	}
+	if(mapDimentions == 3)
+	{
+	   ctx.fillText("30 * 30", 670, 150, 175, 40);
+	   	   spriteScale = 20;
+	   mapWidth = 30;
+	   mapHeight = 30;
+	}
+	if(mapDimentions == 4)
+	{
+	   ctx.fillText("40 * 40", 670, 150, 175, 40);
+	   spriteScale = 15;
+	   mapWidth = 40;
+	   mapHeight = 40;
+	}
+	if(mapDimentions == 5)
+	{
+	   ctx.fillText("60 * 60", 670, 150, 175, 40);
+	   spriteScale = 10;
+	   mapWidth = 60;
+	   mapHeight = 60;
+	}
+	if(mapDimentions == 6)
+	{
+	   ctx.font = "20px Ariel";
+	   ctx.fillText("120 * 120", 670, 150, 175, 40);
+	   spriteScale = 5;
+	   mapWidth = 120;
+	   mapHeight = 120;
+	}
+	//ctx.fillText(spriteScale, 680, 50, 175, 40);
+	ctx.font = "25 Ariel";
+	ctx.fillText("map Dimensions", 610, 200, 175, 40);
+	ctx.fillStyle = "rgb(255,0,0)";
+	ctx.fillRect(600, 120, 50, 45);
+	ctx.fillStyle = "rgb(0,255,0)";
+	//-
+	ctx.fillRect(750, 120, 50, 45);
+	ctx.fillStyle = "rgb(0,0,0)";
+	ctx.fillText("-", 615, 155, 175, 40);
+  	//+
+	ctx.fillStyle = "rgb(0,0,0)";
+	ctx.fillText("+", 760, 160, 175, 40);
+}
+
+function createMap()
+{
+	///assign a land mass
+	///we will use a 1 to denote land
+	///0 will be used for water
+	///start by creating a random sized piece of land 2*2 -> 5*5
+	let landWidth = Math.floor(Math.random() * blockSize) + 2;
+	let landHeight = Math.floor(Math.random() * blockSize) + 2;
+	let widthIndex = Math.floor(Math.random() * (board.length - landWidth));
+	let heightIndex = Math.floor(Math.random() * (board[0].length - landHeight));
+	for(let a = heightIndex; a < heightIndex + landHeight; a++)
+	{
+		for(let b = widthIndex; b < widthIndex + landWidth; b++)
+		{
+			//board[a][b] = 1;
+		}
+	}
+    board[2][2] = 1;
+	board[2][3] = 1;
+	board[3][2] = 1;
+	board[3][3] = 1;
+	for(let c = 0; c < landToAdd; c++)
+	{
+		let landWidth = Math.floor(Math.random() * 5) + 2;
+		let landHeight = Math.floor(Math.random() * 5) + 2;
+		//0, mapWidth (max 20) - landWidth(max of 5);
+		landBlocks = [];
+		if(c > 0)
+		{
+			for(let a = 0; a < board.length - landHeight - 1; a++)
+			{
+				for(let b = 0; b < board[0].length - landWidth - 1; b++)
+				{
+					if(board[a][b] == 1)
+					{
+						landBlocks.push(new LandBlock(b,a));
+					}
+				}
+			}
+			//console.log("This is index of landObj: " + Math.floor(Math.random() * landBlocks.length));
+			//console.log("This is length of landBlocks: " + landBlocks.length);
+			let randomIndex = Math.floor(Math.random() * landBlocks.length);
+			if(landBlocks.length > 0)
+			{
+				let landObj = landBlocks[randomIndex]
+				widthIndex = landObj.x;
+				heightIndex = landObj.y;
+			}
+		}
+		if(landBlocks.length > 0)
+		{
+			for(let a = heightIndex; a < heightIndex + landHeight; a++)
+			{
+				for(let b = widthIndex; b < widthIndex + landWidth; b++)
+				{
+					board[a][b] = 1;
+				}
+			}
+		}
+	}
+
+
+	landBlocks = [];
+	for(let a = 1; a < board.length - 2; a++)
+	{
+		for(let b = 1; b < board[0].length - 2; b++)
+		{
+			if(board[a][b] == 1)
+			{
+				landBlocks.push(new LandBlock(b,a));
+			}
+		}
+	}
+
+	///int[] nums2 = new int[3];
+	// y and x correspond to a and b
+	for(let i = 0; i < landBlocks.length; i++)
+	{
+		if(board[landBlocks[i].y][landBlocks[i].x - 1] == 0 &&
+			board[landBlocks[i].y - 1][landBlocks[i].x] == 0)
+			{
+				board[landBlocks[i].y][landBlocks[i].x] = 2;
+			}
+		else if(board[landBlocks[i].y][landBlocks[i].x + 1] == 0 &&
+			board[landBlocks[i].y - 1][landBlocks[i].x] == 0)
+			{
+				board[landBlocks[i].y][landBlocks[i].x] = 3;
+			}
+		else if(board[landBlocks[i].y][landBlocks[i].x - 1] == 0 &&
+			board[landBlocks[i].y + 1][landBlocks[i].x] == 0)
+			{
+				board[landBlocks[i].y][landBlocks[i].x] = 4;
+			}
+		else if(board[landBlocks[i].y][landBlocks[i].x +1] == 0 &&
+			board[landBlocks[i].y + 1][landBlocks[i].x] == 0)
+			{
+				board[landBlocks[i].y][landBlocks[i].x] = 5;
+			}
+		else if(board[landBlocks[i].y - 1][landBlocks[i].x] == 0)
+			{
+				board[landBlocks[i].y][landBlocks[i].x] = 9;
+			}
+		else if(board[landBlocks[i].y + 1][landBlocks[i].x] == 0)
+			{
+				board[landBlocks[i].y][landBlocks[i].x] = 7;
+			}
+		else if(board[landBlocks[i].y][landBlocks[i].x - 1] == 0)
+			{
+				board[landBlocks[i].y][landBlocks[i].x] = 6;
+			}
+		else if(board[landBlocks[i].y][landBlocks[i].x + 1 ] == 0)
+			{
+				board[landBlocks[i].y][landBlocks[i].x] = 8;
+			}
+	}
+	for(let i = 0; i < numbush; i++)
+	{
+	   let rand = Math.floor(Math.random() * landBlocks.length)
+	   board[landBlocks[rand].y][landBlocks[rand].x] = 10;
+	}
+	//rock
+	landBlocks = [];
+for(let a = 1; a< board.length - 2; a++)
+{
+   for(let b = 1; b < board[0].length - 2; b++)
+   {
+      if(board[a][b] == 0 && board[a +1][b] == 0 &&
+	     board[a][b + 1] == 0 && board[a +1][b + 1] == 0)
+		 {
+		     landBlocks.push(new LandBlock(b,a));
+		 }
+   }
+}
+
+if(landBlocks.length > 0)
+{
+let rand = Math.floor(Math.random() * landBlocks.length)
+    board[landBlocks[rand].y][landBlocks[rand].x] = 36;
+	board[landBlocks[rand].y][landBlocks[rand].x + 1] = 37;
+	board[landBlocks[rand].y + 1][landBlocks[rand].x + 1] = 38;
+	board[landBlocks[rand].y + 1][landBlocks[rand].x] = 39;
+}
+//lilly pad
+landBlocks = [];
+for(let a = 1; a< board.length - 2; a++)
+{
+   for(let b = 1; b < board[0].length - 2; b++)
+   {
+      if(board[a][b] == 0 && board[a +1][b] == 0 &&
+	     board[a][b + 1] == 0 && board[a +1][b + 1] == 0)
+		 {
+		     landBlocks.push(new LandBlock(b,a));
+		 }
+   }
+}
+
+if(landBlocks.length > 0)
+{
+let rand = Math.floor(Math.random() * landBlocks.length)
+let randy = Math.floor(Math.random() * landBlocks.length)
+    board[landBlocks[rand].y][landBlocks[rand].x] = 40;
+	board[landBlocks[randy].y][landBlocks[randy].x] = 41;
+}
+// cage
+landBlocks = [];
+for(let a = 1; a< board.length - 2; a++)
+{
+   for(let b = 1; b < board[1].length - 2; b++)
+   {
+      if(board[a][b] == 1 && board[a +1][b] == 1 &&
+	     board[a][b + 1] == 1 && board[a +1][b + 1] == 1)
+		 {
+		     landBlocks.push(new LandBlock(b,a));
+		 }
+   }
+}
+
+if(landBlocks.length > 1)
+{
+let rand = Math.floor(Math.random() * landBlocks.length)
+    board[landBlocks[rand].y][landBlocks[rand].x] = 57;
+	board[landBlocks[rand].y + 1][landBlocks[rand].x] = 58;
+}
+// fountain
+landBlocks = [];
+for(let a = 1; a< board.length - 2; a++)
+{
+   for(let b = 1; b < board[1].length - 2; b++)
+   {
+      if(board[a][b] == 1 && board[a +1][b] == 1 &&
+	     board[a][b + 1] == 1 && board[a +1][b + 1] == 1)
+		 {
+		     landBlocks.push(new LandBlock(b,a));
+		 }
+   }
+}
+
+if(landBlocks.length > 1)
+{
+let randy = Math.floor(Math.random() * landBlocks.length)
+	board[landBlocks[randy].y][landBlocks[randy].x] = 42;
+    board[landBlocks[randy].y][landBlocks[randy].x + 1] = 43;
+	board[landBlocks[randy].y][landBlocks[randy].x + 2] = 44;
+	board[landBlocks[randy].y + 1][landBlocks[randy].x] = 45;
+	board[landBlocks[randy].y + 1][landBlocks[randy].x + 1] = 46;
+	board[landBlocks[randy].y + 1][landBlocks[randy].x + 2] = 47;
+	board[landBlocks[randy].y + 2][landBlocks[randy].x] = 48;
+	board[landBlocks[randy].y + 2][landBlocks[randy].x + 1] = 49;
+	board[landBlocks[randy].y + 2][landBlocks[randy].x + 2] = 50;
+
+}
+//flag
+for(let a = 1; a< board.length - 2; a++)
+{
+   for(let b = 1; b < board[1].length - 2; b++)
+   {
+      if(board[a][b] == 1 && board[a + 1][b] == 1 &&
+	     board[a][b + 1] == 1 && board[a +1][b + 1] == 1)
+		 {
+		     landBlocks.push(new LandBlock(b,a));
+		 }
+   }
+}
+
+if(landBlocks.length > 26)
+{
+let randy = Math.floor(Math.random() * landBlocks.length)
+    board[landBlocks[randy].y][landBlocks[randy].x] = 51;
+	board[landBlocks[randy].y][landBlocks[randy].x + 1] = 52;
+    board[landBlocks[randy].y + 1][landBlocks[randy].x] = 53;
+	board[landBlocks[randy].y + 1][landBlocks[randy].x + 1] = 54;
+	board[landBlocks[randy].y + 2][landBlocks[randy].x] = 55;
+
+
+}
+// house
+  landBlocks = [];
+for(let a = 1; a< board.length - 2; a++)
+{
+   for(let b = 1; b < board[1].length - 2; b++)
+   {
+      if(board[a][b] == 1 && board[a +1][b] == 1 &&
+	     board[a][b + 1] == 1 && board[a +1][b + 1] == 1)
+		 {
+		     landBlocks.push(new LandBlock(b,a));
+		 }
+   }
+}
+
+if(landBlocks.length > 1)
+{
+let rand = Math.floor(Math.random() * landBlocks.length)
+    board[landBlocks[rand].y][landBlocks[rand].x] = 11;//tile006
+	board[landBlocks[rand].y][landBlocks[rand].x + 1] = 12;//tile007
+	board[landBlocks[rand].y][landBlocks[rand].x + 2] = 13;//tile008
+	board[landBlocks[rand].y][landBlocks[rand].x + 3] = 14;//tile009
+    board[landBlocks[rand].y][landBlocks[rand].x + 4] = 15;//tile10
+	board[landBlocks[rand].y + 1][landBlocks[rand].x + 3] = 31;//tile49//
+	board[landBlocks[rand].y + 1][landBlocks[rand].x + 1] = 32;//tile47
+	board[landBlocks[rand].y + 1][landBlocks[rand].x + 2] = 33;//tile48
+	board[landBlocks[rand].y + 1][landBlocks[rand].x] = 34;//tile46//
+	board[landBlocks[rand].y + 1][landBlocks[rand].x + 4] = 35;//tile50
+	board[landBlocks[rand].y + 2][landBlocks[rand].x] = 16; // tile 86
+	board[landBlocks[rand].y + 2][landBlocks[rand].x + 1] = 17;//tile87
+	board[landBlocks[rand].y + 2][landBlocks[rand].x + 2] = 18;//tile88
+    board[landBlocks[rand].y + 2][landBlocks[rand].x + 3] = 19;//tile89
+	board[landBlocks[rand].y + 2][landBlocks[rand].x + 4] = 20;//tile90
+	board[landBlocks[rand].y + 3][landBlocks[rand].x] = 21;//tile126
+	board[landBlocks[rand].y + 3][landBlocks[rand].x + 1] = 22;//tile127
+	board[landBlocks[rand].y + 3][landBlocks[rand].x + 2] = 23;//tile128
+	board[landBlocks[rand].y + 3][landBlocks[rand].x + 3] = 24;//tile129
+	board[landBlocks[rand].y + 3][landBlocks[rand].x + 4] = 25;//tile130
+	board[landBlocks[rand].y + 4][landBlocks[rand].x] = 26;//tile166
+    board[landBlocks[rand].y + 4][landBlocks[rand].x + 1] = 27;//tile167
+	board[landBlocks[rand].y + 4][landBlocks[rand].x + 2] = 28;//tile168
+	board[landBlocks[rand].y + 4][landBlocks[rand].x + 3] = 29;//tile169
+	board[landBlocks[rand].y + 4][landBlocks[rand].x + 4] = 30;//tile170
+
+}
+}
+
+
+
+function printMap()
+{
+	for(let a = 0; a < board.length; a++)
+	{
+		for(let b = 0; b < board[0].length; b++)
+		{
+			if(board[a][b] == 0)
+			{
+				ctx.drawImage(mapTile0, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 1)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 2)
+			{
+
+				ctx.drawImage(mapTile2, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 3)
+			{
+
+				ctx.drawImage(mapTile3, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 4)
+			{
+
+				ctx.drawImage(mapTile4, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 5)
+			{
+
+				ctx.drawImage(mapTile5, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 6)
+			{
+
+				ctx.drawImage(mapTile6, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 7)
+			{
+
+				ctx.drawImage(mapTile7, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 8)
+			{
+
+				ctx.drawImage(mapTile8, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 9)
+			{
+				ctx.drawImage(mapTile9, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 10)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile10, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 11)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile11, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 12)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile12, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 13)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile13, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 14)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile14, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 15)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile15, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 16)
+			{
+
+				ctx.drawImage(mapTile56, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile16, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 17)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile17, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}else if(board[a][b] == 18)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile18, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 19)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile19, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 20)
+			{
+
+				ctx.drawImage(mapTile56, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile20, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 21)
+			{
+
+				ctx.drawImage(mapTile56, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile21, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 22)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile22, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 23)
+			{
+
+				ctx.drawImage(mapTile56, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile23, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 24)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile24, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 25)
+			{
+
+				ctx.drawImage(mapTile56, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile25, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 26)
+			{
+
+				ctx.drawImage(mapTile56, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile26, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 27)
+			{
+
+				ctx.drawImage(mapTile56, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile27, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 28)
+			{
+
+				ctx.drawImage(mapTile56, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile28, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 29)
+			{
+
+				ctx.drawImage(mapTile56, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile29, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 30)
+			{
+
+				ctx.drawImage(mapTile56, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile30, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 31)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile31, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 32)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile32, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 33)
+			{
+
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile33, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 34)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile34, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 35)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile35, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 36)
+			{
+				ctx.drawImage(mapTile0, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile36, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+		    else if(board[a][b] == 37)
+			{
+				ctx.drawImage(mapTile0, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile37, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 38)
+			{
+				ctx.drawImage(mapTile0, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile38, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 39)
+			{
+				ctx.drawImage(mapTile0, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile39, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 40)
+			{
+				ctx.drawImage(mapTile0, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile40, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 41)
+			{
+				ctx.drawImage(mapTile0, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile41, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 42)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile42, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 43)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile43, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 44)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile44, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 45)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile45, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 46)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile46, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 47)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile47, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 48)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile48, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 49)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile49, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 50)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile50, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 51)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile51, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 52)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile52, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 53)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile53, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 54)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile54, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 55)
+			{
+				ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile55, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 57)
+			{
+			    ctx.drawImage(mapTile1, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile60, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile57, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+			else if(board[a][b] == 58)
+			{
+			    ctx.drawImage(mapTile61, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile59, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+				ctx.drawImage(mapTile58, b*spriteScale, a*spriteScale, spriteScale, spriteScale);
+			}
+		}
+	}
+}
+
+function keyDownHandler(e){
+	if(e.keyCode == 37)
+	{
+		leftPressed = true;
+		rightPressed = false;
+	}
+	else if(e.keyCode == 39)
+	{
+		rightPressed = true;
+		leftPressed = false;
+	}
+}
+
+function keyUpHandler(e){
+	if(e.keyCode == 37)
+	{
+		leftPressed = false;
+	}
+	if(e.keyCode == 39)
+	{
+		rightPressed = false;
+	}
+}
+}
+
+function draw(){
+    setTimeout(function() {
+	requestAnimationFrame(draw);
+	ctx.clearRect(0,0,800,600);
+	///all code goes here
+	//HomeScreen
+	if(screenNum == 0)
+	{
+		drawHomeScreen();
+	}
+	// brickBreaker
+	if(screenNum == 1)
+	{
+	drawBall();
+    collision();
+	stop();
+    drawPaddle();
+    movement();
+	Movement();
+	drawScore();
+    drawBlocks();
+	MovementAD();
+	//drawHighScore();
+	//test();
+	//upArrowMovement();
+	}
+	//worldGenerater
+	if(screenNum == 2)
+	{
+		worldGenerater();
+	}
+
+    }, 1000/fps);
+}
+draw();
+
+</script>
+</body>
+</html>
